@@ -1,10 +1,8 @@
 #pragma once
 
-class IDisposable
-{
+class IDisposable {
 public:
-	virtual ~IDisposable()
-	{
+	virtual ~IDisposable() {
 	}
 
 	virtual void Dispose() = 0;

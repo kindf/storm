@@ -4,11 +4,9 @@
 #include "disposable.h"
 
 template<class T>
-class CacheSwap :public IDisposable
-{
+class CacheSwap :public IDisposable {
 public:
-    CacheSwap()
-    {
+    CacheSwap() {
         _writerCache = &_caches1;
         _readerCache = &_caches2;
     }
@@ -28,34 +26,29 @@ private:
 };
 
 template <class T>
-inline std::list<T*>* CacheSwap<T>::GetWriterCache()
-{
+inline std::list<T*>* CacheSwap<T>::GetWriterCache() {
     return _writerCache;
 }
 
 template <class T>
-inline std::list<T*>* CacheSwap<T>::GetReaderCache()
-{
+inline std::list<T*>* CacheSwap<T>::GetReaderCache() {
     return _readerCache;
 }
 
 template <class T>
-inline void CacheSwap<T>::Swap()
-{
+inline void CacheSwap<T>::Swap() {
     auto tmp = _readerCache;
     _readerCache = _writerCache;
     _writerCache = tmp;
 }
 
 template <class T>
-inline bool CacheSwap<T>::CanSwap()
-{
+inline bool CacheSwap<T>::CanSwap() {
     return _writerCache->size() > 0;
 }
 
 template<class T>
-inline void CacheSwap<T>::Dispose()
-{
+inline void CacheSwap<T>::Dispose() {
     _caches1.clear();
     _caches2.clear();
 

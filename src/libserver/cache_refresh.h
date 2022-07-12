@@ -5,8 +5,7 @@
 #include "disposable.h"
 
 template<class T>
-class CacheRefresh :public IDisposable
-{
+class CacheRefresh :public IDisposable {
 public:
 	std::vector<T*>* GetAddCache();
 	std::vector<T*>* GetRemoveCache();
@@ -24,46 +23,37 @@ protected:
 };
 
 template <class T>
-inline std::vector<T*>* CacheRefresh<T>::GetAddCache()
-{
+inline std::vector<T*>* CacheRefresh<T>::GetAddCache() {
 	return &_add;
 }
 
 template <class T>
-inline std::vector<T*>* CacheRefresh<T>::GetRemoveCache()
-{
+inline std::vector<T*>* CacheRefresh<T>::GetRemoveCache() {
 	return &_remove;
 }
 
 template <class T>
-inline std::vector<T*>* CacheRefresh<T>::GetReaderCache()
-{
+inline std::vector<T*>* CacheRefresh<T>::GetReaderCache() {
 	return &_reader;
 }
 
 template <class T>
-inline std::list<T*> CacheRefresh<T>::Swap()
-{
+inline std::list<T*> CacheRefresh<T>::Swap() {
 	std::list<T*> rs;
-	for (auto one : _add)
-	{
+	for (auto one : _add) {
 		_reader.push_back(one);
 	}
 	_add.clear();
 
-	for (auto one : _remove)
-	{
-		auto iterReader = std::find_if(_reader.begin(), _reader.end(), [one](auto x)
-		{
+	for (auto one : _remove) {
+		auto iterReader = std::find_if(_reader.begin(), _reader.end(), [one](auto x) {
 			return x == one;
 		});
 
-		if (iterReader == _reader.end())
-		{
+		if (iterReader == _reader.end()) {
             std::cout << "CacheRefresh Swap error. not find obj to remove. sn:" << one->GetSN() << std::endl;
 		}
-		else
-		{
+		else {
 			rs.push_back(one);
 			_reader.erase(iterReader);
 		}
@@ -73,30 +63,25 @@ inline std::list<T*> CacheRefresh<T>::Swap()
 }
 
 template <class T>
-inline bool CacheRefresh<T>::CanSwap()
-{
+inline bool CacheRefresh<T>::CanSwap() {
 	return _add.size() > 0 || _remove.size() > 0;
 }
 
 template<class T>
-inline void CacheRefresh<T>::Dispose()
-{
-	for (auto iter = _add.begin(); iter != _add.end(); ++iter)
-	{
+inline void CacheRefresh<T>::Dispose() {
+	for (auto iter = _add.begin(); iter != _add.end(); ++iter) {
 		(*iter)->Dispose();
 		delete (*iter);
 	}
 	_add.clear();
 
-	for (auto iter = _remove.begin(); iter != _remove.end(); ++iter)
-	{
+	for (auto iter = _remove.begin(); iter != _remove.end(); ++iter) {
 		(*iter)->Dispose();
 		delete (*iter);
 	}
 	_remove.clear();
 
-	for (auto iter = _reader.begin(); iter != _reader.end(); ++iter)
-	{
+	for (auto iter = _reader.begin(); iter != _reader.end(); ++iter) {
 		(*iter)->Dispose();
 		delete (*iter);
 	}

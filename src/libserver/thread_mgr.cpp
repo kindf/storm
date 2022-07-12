@@ -16,38 +16,30 @@ bool ThreadMgr::AddObjToThread(THREA_TYPE threadType, ThreadObject* obj){
     return true;
 }
 
-bool ThreadMgr::IsStopAll()
-{
+bool ThreadMgr::IsStopAll() {
     std::lock_guard<std::mutex> guard(_thread_lock);
-    for (auto iter = _threads.begin(); iter != _threads.end(); ++iter) 
-    {
-        if (!iter->second->IsStop())
-        {
+    for (auto iter = _threads.begin(); iter != _threads.end(); ++iter) {
+        if (!iter->second->IsStop()) {
             return false;
         }
     }
     return true;
 }
 
-bool ThreadMgr::IsDisposeAll()
-{
+bool ThreadMgr::IsDisposeAll() {
     std::lock_guard<std::mutex> guard(_thread_lock);
-    for (auto iter = _threads.begin(); iter != _threads.end(); ++iter)
-    {
-        if (!iter->second->IsDispose())
-        {
+    for (auto iter = _threads.begin(); iter != _threads.end(); ++iter) {
+        if (!iter->second->IsDispose()) {
             return false;
         }
     }
     return true;
 }
 
-void ThreadMgr::Dispose()
-{
+void ThreadMgr::Dispose() {
     std::lock_guard<std::mutex> guard(_thread_lock);
     auto iter = _threads.begin();
-    while (iter != _threads.end())
-    {
+    while (iter != _threads.end()) {
         Thread* pThread = iter->second;
         pThread->Dispose();
         delete pThread;
@@ -56,11 +48,9 @@ void ThreadMgr::Dispose()
     _threads.clear();
 }
 
-void ThreadMgr::DispatchPacket(Packet* pPacket)
-{
+void ThreadMgr::DispatchPacket(Packet* pPacket) {
     std::lock_guard<std::mutex> guard(_thread_lock);
-    for (auto iter = _threads.begin(); iter != _threads.end(); ++iter)
-    {
+    for (auto iter = _threads.begin(); iter != _threads.end(); ++iter) {
         Thread* pThread = iter->second;
         pThread->AddPacketToList(pPacket);
     }

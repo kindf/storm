@@ -19,8 +19,7 @@ public:
         return _sn;
     }
 
-    void ResetSN()
-    {
+    void ResetSN() {
         _sn = Global::GetInstance()->GenerateSN();
     }
 

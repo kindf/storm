@@ -12,8 +12,7 @@
 #include "app_type_mgr.h"
 #include "log4_help.h"
 
-Log4::Log4(int appType)
-{
+Log4::Log4(int appType) {
 	_appType = static_cast<APP_TYPE>(appType);
 
     auto pResPath = ResPath::GetInstance();
@@ -39,33 +38,21 @@ Log4::Log4(int appType)
     LOG_DEBUG("Log4::Initialize is Ok.");
 }
 
-Log4::~Log4()
-{
+Log4::~Log4() {
 	log4cplus::deinitialize();
 }
 
-void Log4::DebugInfo(log4cplus::Logger logger) const
-{
+void Log4::DebugInfo(log4cplus::Logger logger) const {
 	log4cplus::SharedAppenderPtrList appenderList = logger.getAllAppenders();
 	auto iter = appenderList.begin();
-	while (iter != appenderList.end())
-	{
+	while (iter != appenderList.end()) {
 		log4cplus::Appender* pAppender = iter->get();
-		//log4cplus::RollingFileAppender* pFileAppender = static_cast<log4cplus::RollingFileAppender*>(pAppender);
-		//if (pFileAppender !=nullptr)
-		//	pFileAppender->imbue(std::locale("zh_CN"));
-
-		//log4cplus::ConsoleAppender* pConsoleAppender = static_cast<log4cplus::ConsoleAppender*>(pAppender);
-		//if (pConsoleAppender != nullptr)
-		//	pConsoleAppender->imbue(std::locale("zh_CN"));
-		
 		std::cout << "[log4] " << LOG4CPLUS_TSTRING_TO_STRING(logger.getName()) << " appender name:" << LOG4CPLUS_TSTRING_TO_STRING(pAppender->getName()) << std::endl;
 		++iter;
 	}
 }
 
-std::string Log4::GetMsgIdName(const Proto::MsgId msgId)
-{
+std::string Log4::GetMsgIdName(const Proto::MsgId msgId) {
 	const google::protobuf::EnumDescriptor *descriptor = Proto::MsgId_descriptor();
 	return descriptor->FindValueByNumber(msgId)->name();
 }

@@ -4,8 +4,7 @@
 
 #include <log4cplus/logger.h>   
 
-class Log4 : public Singleton<Log4>
-{
+class Log4 : public Singleton<Log4> {
 public:
     Log4(int appType);
     ~Log4();
