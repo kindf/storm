@@ -1,0 +1,12 @@
+
+# log文件
+log/
+
+*.a
+bin/
+
+#cmake中间文件
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
