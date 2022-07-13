@@ -17,3 +17,7 @@ void ThreadObject::SetThread(Thread* pThread) {
 Thread* ThreadObject::GetThread() const {
     return _pThread;
 }
+
+bool ThreadObject::CheckObjType(int type) const {
+    return _obj_type == type;
+}

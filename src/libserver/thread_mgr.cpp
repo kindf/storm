@@ -8,12 +8,60 @@
 ThreadMgr::ThreadMgr() {
 }
 
-bool ThreadMgr::AddObjToThread(THREA_TYPE threadType, ThreadObject* obj){
+void ThreadMgr::StartAllWorkThread() {
+    auto iter = _work_thread.begin();
+    while(iter != _work_thread.end()) {
+        iter->second->Start();
+        ++iter;
+    }
+}
+
+Thread* ThreadMgr::NewThread() {
+    auto pThread = new Thread();
     std::lock_guard<std::mutex> guard(_thread_lock);
-    auto pThread = new Thread(obj);
-    pThread->Start();
     _threads.insert(std::make_pair(pThread->GetSN(), pThread));
+    return pThread;
+}
+
+bool ThreadMgr::AddObjWorkThread(THREA_TYPE threadType, ThreadObject* obj) {
+    std::lock_guard<std::mutex> guard(_thread_lock);
+
+    auto iter = _threads.begin();
+    if(_lastThreadSn > 0) {
+        iter = _threads.find(_lastThreadSn);
+    }
+
+    if(iter == _threads.end()) {
+        std::cout << "[ThreadMgr::AddObjWorkThread] no thread." << std::endl;
+        return false;
+    }
+
+    do{
+        ++iter;
+        if(iter == _threads.end())
+            iter = _threads.begin();
+    }while(!(iter->second->IsRun()));
+
+    auto pThread = iter->second;
+    pThread->AddObject(obj);
+    _lastThreadSn = pThread->GetSN();
+    std::lock_guard<std::mutex> guard(_obj_lock);
+    _objects.insert(std::make_pair(threadType, obj));
     return true;
+}
+
+bool ThreadMgr::NewObjThread(THREA_TYPE threadType, ThreadObject* obj) {
+    auto pThread = NewThread();
+    pThread->Start();
+    pThread->AddObject(obj);
+    std::lock_guard<std::mutex> guard(_obj_lock);
+    _objects.insert(std::make_pair(threadType, obj));
+    return true;
+}
+
+bool ThreadMgr::RemoveObjByType(int type) {
+    std::lock_guard<std::mutex> guard(_obj_lock);
+    _objects.erase(type);
 }
 
 bool ThreadMgr::IsStopAll() {
@@ -48,21 +96,21 @@ void ThreadMgr::Dispose() {
     _threads.clear();
 }
 
-void ThreadMgr::DispatchPacket(Packet* pPacket) {
-    std::lock_guard<std::mutex> guard(_thread_lock);
-    for (auto iter = _threads.begin(); iter != _threads.end(); ++iter) {
-        Thread* pThread = iter->second;
-        pThread->AddPacketToList(pPacket);
-    }
-}
+/* void ThreadMgr::DispatchPacket(Packet* pPacket) { */
+/*     std::lock_guard<std::mutex> guard(_thread_lock); */
+/*     for (auto iter = _threads.begin(); iter != _threads.end(); ++iter) { */
+/*         Thread* pThread = iter->second; */
+/*         pThread->AddPacketToList(pPacket); */
+/*     } */
+/* } */
 
-void ThreadMgr::SendPacket(THREA_TYPE threadType, Packet* pPacket) {
-    auto iter = _threads.find(threadType);
-    if(iter == _threads.end()) {
-        std::cout << "[ThreadMgr::SendPacket] can not find thread. thread type: " << threadType << std::endl;
+void ThreadMgr::SendPacket(THREAD_OBJECT_TYPE threadObjType, Packet* pPacket) {
+    auto iter = _objects.find(threadObjType);
+    if(iter == _objects.end()) {
+        std::cout << "[ThreadMgr::SendPacket] can not find obj. obj type: " << threadObjType << std::endl;
         return;
     }
-    auto pThread = iter->second;
+    auto pThread = iter->second->GetThread();
     pThread->AddPacketToList(pPacket);
     return;
 }

@@ -4,39 +4,60 @@
 #include <iterator>
 
 void Thread::Update() {
+
+    _objs_lock.lock();
+    if(_objList.CanSwap()) {
+        auto pDelList = _objList.Swap();
+        for(auto pOne : pDelList) {
+            ThreadMgr::GetInstance()->RemoveObjByType(pOne->GetObjType());
+            pOne->Dispose();
+            delete pOne;
+        }
+    }
+
+
     _packet_lock.lock();
     if (_cachePackets.CanSwap()) {
         _cachePackets.Swap();
     }
     _packet_lock.unlock();
 
+    auto pList = _objList.GetReaderCache();
     auto pMsgList = _cachePackets.GetReaderCache();
-    for (auto itMsg = pMsgList->begin(); itMsg != pMsgList->end(); ++itMsg) {
-        _threadObj->ProcessPacket(*itMsg);
+    for(auto iter = pList->begin(); iter != pList->end(); ++iter) {
+        auto pObj = (*iter);
+        for (auto itMsg = pMsgList->begin(); itMsg != pMsgList->end(); ++itMsg) {
+            auto pPacket = (*iter);
+            if(CheckObjType(pPacket->GetDest()) {
+                pObj->ProcessPacket(*itMsg);
+            }
+        }
+        pObj->Update();
+
+        // ·Ç¼¤»î×´Ì¬£¬É¾³ý
+        if (!pObj->IsActive()) {
+            _objList.GetRemoveCache()->emplace_back(pObj);
+        }
     }
 
-    _threadObj->Update();
 
-    // ·Ç¼¤»î×´Ì¬£¬É¾³ý
-    if (!_threadObj->IsActive()) {
-    }
     pMsgList->clear();
 }
 
-void ThreadObjectList::AddPacketToList(Packet* pPacket) {
+void Thread::AddPacketToList(Packet* pPacket) {
     std::lock_guard<std::mutex> guard(_packet_lock);
     _cachePackets.GetWriterCache()->emplace_back(pPacket);
 }
 
-void ThreadObjectList::Dispose() {
-	std::lock_guard<std::mutex> guardObj(_obj_lock);
-    _objlist.Dispose();
+void Thread::Dispose() {
+	std::lock_guard<std::mutex> guardObj(_objs_lock);
+    _objList.Dispose();
 
 	std::lock_guard<std::mutex> guardPacket(_packet_lock);
     _cachePackets.Dispose();
 }
 
-Thread::Thread(ThreadObject* pThreadObj): _threadObj(pThreadObj) {
+Thread::Thread() {
     _state = ThreadState_Init;
 }
 

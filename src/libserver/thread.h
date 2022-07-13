@@ -14,9 +14,11 @@ enum ThreadState {
     ThreadState_Stoped,
 };
 
+typedef std::pair<uint32, Packet>
+
 class Thread : public SnObject, public IDisposable {
 public:
-    Thread(ThreadObject* pThreadObj);
+    Thread();
     void Start();
     bool IsRun() const;
     bool IsStop() const;
@@ -31,7 +33,8 @@ private:
     ThreadState _state;
     std::thread _thread;
 
-    ThreadObject* _threadObj;
+    std::mutex _objs_lock;
+    CacheSwap<ThreadObject> _objList;
     // 本线程中的所有待处理包
     std::mutex _packet_lock;
     CacheSwap<Packet> _cachePackets;
