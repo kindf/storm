@@ -22,4 +22,5 @@ enum THREAD_OBJECT_TYPE {
     TOT_LOGIN,
     TOT_DATABASE,
     TOT_CONSOLE,
+    TOT_TEST,
 };

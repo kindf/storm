@@ -81,8 +81,9 @@ void Thread::Start() {
             _state = ThreadState_Run;
             while (!Global::GetInstance()->IsStop)
             {
-            Update();
-            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+                Update();
+                std::this_thread::sleep_for(std::chrono::milliseconds(1));
+                std::cout << "thread running" << std::endl;
             }
 
             const auto theadId = _thread.get_id();

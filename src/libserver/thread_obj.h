@@ -11,7 +11,7 @@ public:
 
     virtual bool Init() = 0;
     virtual void Update() = 0;    
-    virtual void ProcessPacket(Packet* pPacket);
+    virtual void ProcessPacket(Packet* pPacket){};
 
     void SetThread(Thread* pThread);
     Thread* GetThread() const;

@@ -29,6 +29,8 @@ public:
     /* void DispatchPacket(Packet* pPacket); */
     void SendPacket(THREAD_OBJECT_TYPE threadObjectType, Packet* pPacket);
 
+    void Update();
+
 private:
     uint64 _lastThreadSn{ 0 }; // 实现线程对象均分
 

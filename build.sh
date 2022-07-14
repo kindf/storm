@@ -1,3 +1,4 @@
+
 args=$1
 
 buildType="Debug"
@@ -27,8 +28,8 @@ build(){
 cd src/
 build
 
-# cd ../apps/
-# build
+cd apps/
+build
 
 # cd ../tools/
 # build

@@ -24,3 +24,4 @@ bool ThreadObject::CheckObjType(int type) const {
 int ThreadObject::GetObjType() const {
     return _obj_type;
 }
+
