@@ -2,6 +2,7 @@
 #include <vector>
 #include <algorithm>
 #include <list>
+#include <iostream>
 #include "disposable.h"
 
 template<class T>

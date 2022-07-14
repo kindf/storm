@@ -4,6 +4,7 @@
 #include "disposable.h"
 #include "common.h"
 #include "thread_mgr.h"
+#include "app_type_mgr.h"
 
 template<class APPClass>
 inline int MainTemplate() {
@@ -24,8 +25,6 @@ public:
 
 	void Run() const;
 	void UpdateTime() const;
-
-	bool AddListenerToThread(std::string ip, int port) const;
 
     // signal
     static void Signalhandler(int signalValue);

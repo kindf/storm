@@ -1,7 +1,7 @@
+#include <iterator>
 #include "thread.h"
 #include "global.h"
-
-#include <iterator>
+#include "thread_mgr.h"
 
 void Thread::Update() {
 
@@ -27,8 +27,8 @@ void Thread::Update() {
     for(auto iter = pList->begin(); iter != pList->end(); ++iter) {
         auto pObj = (*iter);
         for (auto itMsg = pMsgList->begin(); itMsg != pMsgList->end(); ++itMsg) {
-            auto pPacket = (*iter);
-            if(CheckObjType(pPacket->GetDest()) {
+            auto pPacket = (*itMsg);
+            if(pObj->CheckObjType(pPacket->GetDest())) {
                 pObj->ProcessPacket(*itMsg);
             }
         }
@@ -47,6 +47,21 @@ void Thread::Update() {
 void Thread::AddPacketToList(Packet* pPacket) {
     std::lock_guard<std::mutex> guard(_packet_lock);
     _cachePackets.GetWriterCache()->emplace_back(pPacket);
+}
+
+void Thread::AddObject(ThreadObject* pThreadObj) {
+    std::lock_guard<std::mutex> guard(_objs_lock);
+
+    // 在加入之前初始化一下
+    if (!pThreadObj->Init()) {
+        std::cout << "AddObject Failed. ThreadObject init failed." << std::endl;
+    }else {
+        /* pThreadObj->RegisterMsgFunction(); */
+        _objList.GetAddCache()->emplace_back(pThreadObj);
+        const auto pThread = dynamic_cast<Thread*>(this);
+        if (pThread != nullptr)
+            pThreadObj->SetThread(pThread);
+    }
 }
 
 void Thread::Dispose() {

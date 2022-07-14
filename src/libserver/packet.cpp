@@ -16,7 +16,7 @@ Packet::~Packet() {
 }
 
 void Packet::BackToPool() {
-    _msgId = Proto::MsgId::None;
+    _dest = TOT_DEFAULT;
     _beginIndex = 0;
     _endIndex = 0;
 }

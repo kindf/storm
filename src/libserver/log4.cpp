@@ -52,8 +52,8 @@ void Log4::DebugInfo(log4cplus::Logger logger) const {
 	}
 }
 
-std::string Log4::GetMsgIdName(const Proto::MsgId msgId) {
-	const google::protobuf::EnumDescriptor *descriptor = Proto::MsgId_descriptor();
-	return descriptor->FindValueByNumber(msgId)->name();
-}
+/* std::string Log4::GetMsgIdName(const Proto::MsgId msgId) { */
+/* 	const google::protobuf::EnumDescriptor *descriptor = Proto::MsgId_descriptor(); */
+/* 	return descriptor->FindValueByNumber(msgId)->name(); */
+/* } */
 

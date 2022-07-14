@@ -1,17 +1,16 @@
 #pragma once
 
 #include <mutex>
-
+#include <map>
 #include "common.h"
 #include "thread.h"
-#include "work_thread.h"
 #include "singleton.h"
-#include <map>
+#include "disposable.h"
 
 class Packet;
 class ThreadObject;
 
-class ThreadMgr :public Singleton<ThreadMgr> {
+class ThreadMgr :public Singleton<ThreadMgr>, public IDisposable {
 public:
     ThreadMgr();
     void StartAllWorkThread();
@@ -20,14 +19,15 @@ public:
     bool IsDisposeAll();
     void Dispose() override;    
 
-    void NewThread();
-    bool AddObjWorkThread(OBJECT_TYPE objectType, ThreadObject* obj);
+    Thread* NewThread();
+    bool AddObjWorkThread(THREAD_OBJECT_TYPE objectType, ThreadObject* obj);
 
-    bool NewObjThread(OBJECT_TYPE objectType, ThreadObject *obj);
+    bool NewObjThread(THREAD_OBJECT_TYPE objectType, ThreadObject *obj);
 
+    void RemoveObjByType(int objectType);
     // message
     /* void DispatchPacket(Packet* pPacket); */
-    void SendPacket(OBJECT_TYPE objectType, Packet* pPacket);
+    void SendPacket(THREAD_OBJECT_TYPE threadObjectType, Packet* pPacket);
 
 private:
     uint64 _lastThreadSn{ 0 }; // 实现线程对象均分

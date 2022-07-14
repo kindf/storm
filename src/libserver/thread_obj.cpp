@@ -7,7 +7,6 @@ bool ThreadObject::IsActive() const {
 
 void ThreadObject::Dispose() {
     _active = false;
-    MessageList::Dispose();
 }
 
 void ThreadObject::SetThread(Thread* pThread) {
@@ -20,4 +19,8 @@ Thread* ThreadObject::GetThread() const {
 
 bool ThreadObject::CheckObjType(int type) const {
     return _obj_type == type;
+}
+
+int ThreadObject::GetObjType() const {
+    return _obj_type;
 }

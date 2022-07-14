@@ -1,16 +1,13 @@
+#include <iostream>
 #include "thread_mgr.h"
 #include "common.h"
-#include <iostream>
-
-#include "network.h"
-#include "network_listen.h"
 
 ThreadMgr::ThreadMgr() {
 }
 
 void ThreadMgr::StartAllWorkThread() {
-    auto iter = _work_thread.begin();
-    while(iter != _work_thread.end()) {
+    auto iter = _work_threads.begin();
+    while(iter != _work_threads.end()) {
         iter->second->Start();
         ++iter;
     }
@@ -23,7 +20,7 @@ Thread* ThreadMgr::NewThread() {
     return pThread;
 }
 
-bool ThreadMgr::AddObjWorkThread(THREA_TYPE threadType, ThreadObject* obj) {
+bool ThreadMgr::AddObjWorkThread(THREAD_OBJECT_TYPE threadObjectType, ThreadObject* obj) {
     std::lock_guard<std::mutex> guard(_thread_lock);
 
     auto iter = _threads.begin();
@@ -45,23 +42,18 @@ bool ThreadMgr::AddObjWorkThread(THREA_TYPE threadType, ThreadObject* obj) {
     auto pThread = iter->second;
     pThread->AddObject(obj);
     _lastThreadSn = pThread->GetSN();
-    std::lock_guard<std::mutex> guard(_obj_lock);
-    _objects.insert(std::make_pair(threadType, obj));
+    std::lock_guard<std::mutex> obj_guard(_obj_lock);
+    _objects.insert(std::make_pair(threadObjectType, obj));
     return true;
 }
 
-bool ThreadMgr::NewObjThread(THREA_TYPE threadType, ThreadObject* obj) {
+bool ThreadMgr::NewObjThread(THREAD_OBJECT_TYPE threadObjectType, ThreadObject* obj) {
     auto pThread = NewThread();
     pThread->Start();
     pThread->AddObject(obj);
     std::lock_guard<std::mutex> guard(_obj_lock);
-    _objects.insert(std::make_pair(threadType, obj));
+    _objects.insert(std::make_pair(threadObjectType, obj));
     return true;
-}
-
-bool ThreadMgr::RemoveObjByType(int type) {
-    std::lock_guard<std::mutex> guard(_obj_lock);
-    _objects.erase(type);
 }
 
 bool ThreadMgr::IsStopAll() {
@@ -94,6 +86,11 @@ void ThreadMgr::Dispose() {
         ++iter;
     }
     _threads.clear();
+}
+
+void ThreadMgr::RemoveObjByType(int objectType) {
+    std::lock_guard<std::mutex> guard(_obj_lock);
+    _objects.erase(objectType);
 }
 
 /* void ThreadMgr::DispatchPacket(Packet* pPacket) { */

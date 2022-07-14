@@ -12,12 +12,12 @@ ServerApp::ServerApp(APP_TYPE  appType) {
 
     _appType = appType;
 
-    DynamicObjectPoolMgr::Instance();
+    /* DynamicObjectPoolMgr::Instance(); */
     Global::Instance();
     ThreadMgr::Instance();
     AppTypeMgr::Instance();
     ResPath::Instance();
-    Yaml::Instance();
+    /* Yaml::Instance(); */
     _pThreadMgr = ThreadMgr::GetInstance();
     UpdateTime();
 
@@ -26,7 +26,7 @@ ServerApp::ServerApp(APP_TYPE  appType) {
         _pThreadMgr->NewThread();
     }
 
-    _pThreadMgr->StartAllThread();
+    _pThreadMgr->StartAllWorkThread();
 }
 
 ServerApp::~ServerApp() {
@@ -54,8 +54,8 @@ void ServerApp::Dispose() {
 void ServerApp::Run() const {
     while (!Global::GetInstance()->IsStop) {
         UpdateTime();
-        _pThreadMgr->Update();
-        DynamicObjectPoolMgr::GetInstance()->Update();
+        /* _pThreadMgr->Update(); */
+        /* DynamicObjectPoolMgr::GetInstance()->Update(); */
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 
@@ -81,9 +81,9 @@ void ServerApp::Run() const {
     _pThreadMgr->Dispose();
 
     LOG_DEBUG("disposing all pool...")
-    DynamicObjectPoolMgr::GetInstance()->Update();
-    DynamicObjectPoolMgr::GetInstance()->Dispose();
-    DynamicObjectPoolMgr::DestroyInstance();
+    /* DynamicObjectPoolMgr::GetInstance()->Update(); */
+    /* DynamicObjectPoolMgr::GetInstance()->Dispose(); */
+    /* DynamicObjectPoolMgr::DestroyInstance(); */
 
     Global::DestroyInstance();
     ThreadMgr::DestroyInstance();
@@ -94,15 +94,4 @@ void ServerApp::UpdateTime() const {
     struct timeval tv;
     gettimeofday(&tv, nullptr);
     Global::GetInstance()->TimeTick = tv.tv_sec * 1000 +  tv.tv_usec * 0.001;
-}
-
-bool ServerApp::AddListenerToThread(std::string ip, int port) const {
-    NetworkListen* pListener = new NetworkListen();
-    if (!pListener->Listen(ip, port)) {
-        delete pListener;
-        return false;
-    }
-
-    _pThreadMgr->AddNetworkToThread(APP_Listen, pListener);
-    return true;
 }
