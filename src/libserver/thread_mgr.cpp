@@ -6,8 +6,8 @@ ThreadMgr::ThreadMgr() {
 }
 
 void ThreadMgr::StartAllWorkThread() {
-    auto iter = _work_threads.begin();
-    while(iter != _work_threads.end()) {
+    auto iter = _threads.begin();
+    while(iter != _threads.end()) {
         iter->second->Start();
         ++iter;
     }
@@ -21,27 +21,28 @@ Thread* ThreadMgr::NewThread() {
 }
 
 bool ThreadMgr::AddObjWorkThread(THREAD_OBJECT_TYPE threadObjectType, ThreadObject* obj) {
-    std::lock_guard<std::mutex> guard(_thread_lock);
+    {
+        std::lock_guard<std::mutex> guard(_thread_lock);
+        auto iter = _threads.begin();
+        if(_lastThreadSn > 0) {
+            iter = _threads.find(_lastThreadSn);
+        }
 
-    auto iter = _threads.begin();
-    if(_lastThreadSn > 0) {
-        iter = _threads.find(_lastThreadSn);
+        if(iter == _threads.end()) {
+            std::cout << "[ThreadMgr::AddObjWorkThread] no thread." << std::endl;
+            return false;
+        }
+
+        do{
+            ++iter;
+            if(iter == _threads.end())
+                iter = _threads.begin();
+        }while(!(iter->second->IsRun()));
+
+        auto pThread = iter->second;
+        pThread->AddObject(obj);
+        _lastThreadSn = pThread->GetSN();
     }
-
-    if(iter == _threads.end()) {
-        std::cout << "[ThreadMgr::AddObjWorkThread] no thread." << std::endl;
-        return false;
-    }
-
-    do{
-        ++iter;
-        if(iter == _threads.end())
-            iter = _threads.begin();
-    }while(!(iter->second->IsRun()));
-
-    auto pThread = iter->second;
-    pThread->AddObject(obj);
-    _lastThreadSn = pThread->GetSN();
     std::lock_guard<std::mutex> obj_guard(_obj_lock);
     _objects.insert(std::make_pair(threadObjectType, obj));
     return true;

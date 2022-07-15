@@ -57,7 +57,6 @@ void ServerApp::Run() const {
         _pThreadMgr->Update();
         /* DynamicObjectPoolMgr::GetInstance()->Update(); */
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
-        LOG_DEBUG("serverapp running. global is stop:" << Global::GetInstance()->IsStop);
     }
 
     // 停止所有线程

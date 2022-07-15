@@ -5,22 +5,24 @@
 
 void Thread::Update() {
 
-    _objs_lock.lock();
-    if(_objList.CanSwap()) {
-        auto pDelList = _objList.Swap();
-        for(auto pOne : pDelList) {
-            ThreadMgr::GetInstance()->RemoveObjByType(pOne->GetObjType());
-            pOne->Dispose();
-            delete pOne;
+    {
+        std::lock_guard<std::mutex> guard1(_objs_lock);
+        if(_objList.CanSwap()) {
+            auto pDelList = _objList.Swap();
+            for(auto pOne : pDelList) {
+                ThreadMgr::GetInstance()->RemoveObjByType(pOne->GetObjType());
+                pOne->Dispose();
+                delete pOne;
+            }
         }
     }
 
-
-    _packet_lock.lock();
-    if (_cachePackets.CanSwap()) {
-        _cachePackets.Swap();
+    {
+        std::lock_guard<std::mutex> guard2(_packet_lock);
+        if (_cachePackets.CanSwap()) {
+            _cachePackets.Swap();
+        }
     }
-    _packet_lock.unlock();
 
     auto pList = _objList.GetReaderCache();
     auto pMsgList = _cachePackets.GetReaderCache();
@@ -83,7 +85,6 @@ void Thread::Start() {
             {
                 Update();
                 std::this_thread::sleep_for(std::chrono::milliseconds(1));
-                std::cout << "thread running" << std::endl;
             }
 
             const auto theadId = _thread.get_id();
