@@ -5,6 +5,7 @@
 #include "common.h"
 #include "thread_mgr.h"
 #include "log4_help.h"
+#include "console.h"
 
 class TestThreadObj : public ThreadObject, public Singleton<TestThreadObj> {
 public:
@@ -23,5 +24,8 @@ void GameworldApp::InitApp()
     Log4::Instance(APP_TYPE::APP_GAMEWORLD);
 
     TestThreadObj* pTest = TestThreadObj::Instance();
-    ThreadMgr::Instance()->AddObjWorkThread(TOT_TEST, pTest);
+    ThreadMgr::GetInstance()->AddObjWorkThread(TOT_TEST, pTest);
+    
+    Console* pConsole = new Console();
+    ThreadMgr::GetInstance()->AddObjWorkThread(TOT_CONSOLE, pConsole);
 }
