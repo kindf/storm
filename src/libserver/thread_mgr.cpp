@@ -1,6 +1,6 @@
-#include <iostream>
 #include "thread_mgr.h"
 #include "common.h"
+#include "log4_help.h"
 
 ThreadMgr::ThreadMgr() {
 }
@@ -29,7 +29,7 @@ bool ThreadMgr::AddObjWorkThread(THREAD_OBJECT_TYPE threadObjectType, ThreadObje
         }
 
         if(iter == _threads.end()) {
-            std::cout << "[ThreadMgr::AddObjWorkThread] no thread." << std::endl;
+            LOG_WARN("[ThreadMgr::AddObjWorkThread] no thread.");
             return false;
         }
 
@@ -105,7 +105,7 @@ void ThreadMgr::RemoveObjByType(int objectType) {
 void ThreadMgr::SendPacket(THREAD_OBJECT_TYPE threadObjType, Packet* pPacket) {
     auto iter = _objects.find(threadObjType);
     if(iter == _objects.end()) {
-        std::cout << "[ThreadMgr::SendPacket] can not find obj. obj type: " << threadObjType << std::endl;
+        LOG_WARN("[ThreadMgr::SendPacket] can not find obj. obj type: " << threadObjType);
         return;
     }
     auto pThread = iter->second->GetThread();

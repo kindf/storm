@@ -1,6 +1,6 @@
-#include "base_buffer.h"
-#include <iostream>
 #include <cstring>
+#include "base_buffer.h"
+#include "log4_help.h"
 
 unsigned Buffer::GetEmptySize() {
 	return _bufferSize - _endIndex;
@@ -9,7 +9,7 @@ unsigned Buffer::GetEmptySize() {
 void Buffer::ReAllocBuffer(const unsigned int dataLength) {
 	// 如果缓冲区超过最大缓冲值，发出警告
 	if (_bufferSize >= MAX_SIZE) {
-		std::cout << "Buffer::Realloc except!! Max size:" << _bufferSize << std::endl;
+		LOG_WARN("Buffer::Realloc except!! Max size:" << _bufferSize);
 	}
 
 	char* tempBuffer = new char[_bufferSize + ADDITIONAL_SIZE];
@@ -43,7 +43,5 @@ void Buffer::ReAllocBuffer(const unsigned int dataLength) {
 
 	_beginIndex = 0;
 	_endIndex = _newEndIndex;
-
-	//std::cout << "Buffer::Realloc. _bufferSize:" << _bufferSize << std::endl;
 }
 

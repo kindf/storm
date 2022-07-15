@@ -2,8 +2,8 @@
 #include <vector>
 #include <algorithm>
 #include <list>
-#include <iostream>
 #include "disposable.h"
+#include "log4_help.h"
 
 template<class T>
 class CacheRefresh :public IDisposable {
@@ -52,7 +52,7 @@ inline std::list<T*> CacheRefresh<T>::Swap() {
 		});
 
 		if (iterReader == _reader.end()) {
-            std::cout << "CacheRefresh Swap error. not find obj to remove. sn:" << one->GetSN() << std::endl;
+            LOG_WARN("CacheRefresh Swap error. not find obj to remove. sn:" << one->GetSN());
 		}
 		else {
 			rs.push_back(one);

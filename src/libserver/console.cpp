@@ -1,10 +1,10 @@
-#include "console.h"
-
 #include <iostream>
 #include <thread>
+#include "console.h"
 #include "thread.h"
 #include "util_string.h"
 #include "console_cmd_pool.h"
+#include "log4_help.h"
 
 void ConsoleCmd::OnRegisterHandler(std::string key, HandleConsole handler) {
     _handles[key] = handler;
@@ -14,7 +14,7 @@ bool ConsoleCmd::CheckParamCnt(std::vector<std::string>& params, const size_t co
     if (params.size() == count)
         return true;
 
-    std::cout << "input param size is error. see: -help" << std::endl;
+    LOG_WARN("input param size is error. see: -help");
 
     return false;
 }
@@ -31,7 +31,7 @@ void ConsoleCmd::Process(std::vector<std::string>& params) {
     const auto iter = _handles.find(key);
 
     if (iter == _handles.end()) {
-        std::cout << "input error. can't find cmd:" << key.c_str() << std::endl;
+        LOG_WARN("input error. can't find cmd:" << key.c_str());
         return;
     }
 
@@ -83,7 +83,7 @@ void Console::Update() {
     const auto iter = _handles.find(key);
 
     if (iter == _handles.end()) {
-        std::cout << "input error. cmd:" << cmd.c_str() << std::endl;
+        LOG_DEBUG("input error. cmd:" << cmd.c_str());
         return;
     }
 

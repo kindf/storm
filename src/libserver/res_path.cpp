@@ -1,8 +1,8 @@
-#include "res_path.h"
-#include <iostream>
 #include <unistd.h>
 #include "common.h"
+#include "res_path.h"
 #include "util_string.h"
+#include "log4_help.h"
 
 ResPath::ResPath() {
     // 获取引擎环境配置
@@ -13,7 +13,7 @@ ResPath::ResPath() {
         char name[PATH_MAX];
         int rslt = ::readlink("/proc/self/exe", name, PATH_MAX);
         if (rslt < 0 || rslt >= PATH_MAX) {
-            std::cout << "ResPath::Initialize. res path failed." << std::endl;
+            LOG_WARN("ResPath::Initialize. res path failed.");
             return;
         }
 
@@ -27,7 +27,7 @@ ResPath::ResPath() {
     }
 
     _resPath += "/res";
-    std::cout << "GENGINE_RES_PATH=" << _resPath << std::endl;
+    LOG_DEBUG("GENGINE_RES_PATH=" << _resPath);
 
 }
 

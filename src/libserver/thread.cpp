@@ -2,6 +2,7 @@
 #include "thread.h"
 #include "global.h"
 #include "thread_mgr.h"
+#include "log4_help.h"
 
 void Thread::Update() {
 
@@ -56,7 +57,7 @@ void Thread::AddObject(ThreadObject* pThreadObj) {
 
     // 在加入之前初始化一下
     if (!pThreadObj->Init()) {
-        std::cout << "AddObject Failed. ThreadObject init failed." << std::endl;
+        LOG_WARN("AddObject Failed. ThreadObject init failed.");
     }else {
         /* pThreadObj->RegisterMsgFunction(); */
         _objList.GetAddCache()->emplace_back(pThreadObj);
@@ -88,7 +89,7 @@ void Thread::Start() {
             }
 
             const auto theadId = _thread.get_id();
-            std::cout << "close thread [1/2]. thread sn:" << this->GetSN() << " thread id:" << theadId << std::endl;
+            LOG_INFO("close thread [1/2]. thread sn:" << this->GetSN() << " thread id:" << theadId);
             _state = ThreadState_Stoped;
             });
 }
@@ -105,7 +106,7 @@ bool Thread::IsDispose() {
     if (_thread.joinable()) {
         const auto theadId = _thread.get_id();
         _thread.join();
-        std::cout << "close thread [2/2]. thread sn:" << this->GetSN() << " thread id:" << theadId << std::endl;
+        LOG_INFO("close thread [2/2]. thread sn:" << this->GetSN() << " thread id:" << theadId);
         return true;
     }
 
