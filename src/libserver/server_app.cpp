@@ -1,7 +1,7 @@
 #include "common.h"
 #include "server_app.h"
 /* #include "network_listen.h" */
-/* #include "object_pool_mgr.h" */
+#include "object_pool_mgr.h"
 /* #include "yaml.h" */
 #include "res_path.h"
 /* #include "app_type_mgr.h" */
@@ -12,7 +12,7 @@ ServerApp::ServerApp(APP_TYPE  appType) {
 
     _appType = appType;
 
-    /* DynamicObjectPoolMgr::Instance(); */
+    DynamicObjectPoolMgr::Instance();
     Global::Instance();
     ThreadMgr::Instance();
     AppTypeMgr::Instance();
@@ -55,7 +55,7 @@ void ServerApp::Run() const {
     while (!Global::GetInstance()->IsStop) {
         UpdateTime();
         _pThreadMgr->Update();
-        /* DynamicObjectPoolMgr::GetInstance()->Update(); */
+        DynamicObjectPoolMgr::GetInstance()->Update();
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 
@@ -81,9 +81,9 @@ void ServerApp::Run() const {
     _pThreadMgr->Dispose();
 
     LOG_DEBUG("disposing all pool...")
-    /* DynamicObjectPoolMgr::GetInstance()->Update(); */
-    /* DynamicObjectPoolMgr::GetInstance()->Dispose(); */
-    /* DynamicObjectPoolMgr::DestroyInstance(); */
+    DynamicObjectPoolMgr::GetInstance()->Update();
+    DynamicObjectPoolMgr::GetInstance()->Dispose();
+    DynamicObjectPoolMgr::DestroyInstance();
 
     Global::DestroyInstance();
     ThreadMgr::DestroyInstance();
