@@ -140,7 +140,7 @@ void DynamicObjectPool<T>::Update() {
     _inUseLock.unlock();
 
     std::lock_guard<std::mutex> guard(_freeLock);
-    for (auto one : freeObjs {
+    for (auto one : freeObjs) {
         _free.push(one);
     }
 }
