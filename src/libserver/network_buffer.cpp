@@ -185,8 +185,7 @@ void SendNetworkBuffer::AddPacket(Packet* pPacket) {
 
     // 2.头部
     PacketHead head;
-    // TODO:
-    head.MsgId = 0;
+    head.MsgId = pPacket->GetMsgId();
     MemcpyToBuffer(reinterpret_cast<char*>(&head), sizeof(PacketHead));
 
     // 3.数据

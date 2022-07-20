@@ -20,7 +20,7 @@ Thread* ThreadMgr::NewThread() {
     return pThread;
 }
 
-bool ThreadMgr::AddObjWorkThread(THREAD_OBJECT_TYPE threadObjectType, ThreadObject* obj) {
+bool ThreadMgr::AddObjWorkThread(ThreadObject* obj) {
     {
         std::lock_guard<std::mutex> guard(_thread_lock);
         auto iter = _threads.begin();
@@ -44,16 +44,16 @@ bool ThreadMgr::AddObjWorkThread(THREAD_OBJECT_TYPE threadObjectType, ThreadObje
         _lastThreadSn = pThread->GetSN();
     }
     std::lock_guard<std::mutex> obj_guard(_obj_lock);
-    _objects.insert(std::make_pair(threadObjectType, obj));
+    _objects.insert(std::make_pair(obj->GetObjType(), obj));
     return true;
 }
 
-bool ThreadMgr::NewObjThread(THREAD_OBJECT_TYPE threadObjectType, ThreadObject* obj) {
+bool ThreadMgr::NewObjThread(ThreadObject* obj) {
     auto pThread = NewThread();
     pThread->Start();
     pThread->AddObject(obj);
     std::lock_guard<std::mutex> guard(_obj_lock);
-    _objects.insert(std::make_pair(threadObjectType, obj));
+    _objects.insert(std::make_pair(obj->GetObjType(), obj));
     return true;
 }
 
@@ -108,8 +108,8 @@ void ThreadMgr::SendPacket(THREAD_OBJECT_TYPE threadObjType, Packet* pPacket) {
         LOG_WARN("[ThreadMgr::SendPacket] can not find obj. obj type: " << threadObjType);
         return;
     }
-    auto pThread = iter->second->GetThread();
-    pThread->AddPacketToList(pPacket);
+    auto pThreadObj = iter->second;
+    pThreadObj->AddPacket(pPacket);
     return;
 }
 

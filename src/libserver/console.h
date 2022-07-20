@@ -28,6 +28,7 @@ private:
 
 class Console : public ThreadObject {
 public:
+    Console():ThreadObject(TOT_CONSOLE){}
 	bool Init() override;
 	void Update() override;
 	void Dispose() override;

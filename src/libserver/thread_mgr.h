@@ -20,9 +20,9 @@ public:
     void Dispose() override;    
 
     Thread* NewThread();
-    bool AddObjWorkThread(THREAD_OBJECT_TYPE objectType, ThreadObject* obj);
+    bool AddObjWorkThread(ThreadObject* obj);
 
-    bool NewObjThread(THREAD_OBJECT_TYPE objectType, ThreadObject *obj);
+    bool NewObjThread(ThreadObject *obj);
 
     void RemoveObjByType(int objectType);
     // message

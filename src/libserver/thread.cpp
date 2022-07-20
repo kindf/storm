@@ -18,23 +18,14 @@ void Thread::Update() {
         }
     }
 
-    {
-        std::lock_guard<std::mutex> guard2(_packet_lock);
-        if (_cachePackets.CanSwap()) {
-            _cachePackets.Swap();
-        }
-    }
-
     auto pList = _objList.GetReaderCache();
-    auto pMsgList = _cachePackets.GetReaderCache();
     for(auto iter = pList->begin(); iter != pList->end(); ++iter) {
         auto pObj = (*iter);
+        auto pMsgList = pObj->GetPackets();
         for (auto itMsg = pMsgList->begin(); itMsg != pMsgList->end(); ++itMsg) {
-            auto pPacket = (*itMsg);
-            if(pObj->CheckObjType(pPacket->GetDest())) {
-                pObj->ProcessPacket(*itMsg);
-            }
+            pObj->ProcessPacket(*itMsg);
         }
+        pMsgList->clear();
         pObj->Update();
 
         // ·Ç¼¤»î×´Ì¬£¬É¾³ý
@@ -44,12 +35,6 @@ void Thread::Update() {
     }
 
 
-    pMsgList->clear();
-}
-
-void Thread::AddPacketToList(Packet* pPacket) {
-    std::lock_guard<std::mutex> guard(_packet_lock);
-    _cachePackets.GetWriterCache()->emplace_back(pPacket);
 }
 
 void Thread::AddObject(ThreadObject* pThreadObj) {
@@ -70,9 +55,6 @@ void Thread::AddObject(ThreadObject* pThreadObj) {
 void Thread::Dispose() {
 	std::lock_guard<std::mutex> guardObj(_objs_lock);
     _objList.Dispose();
-
-	std::lock_guard<std::mutex> guardPacket(_packet_lock);
-    _cachePackets.Dispose();
 }
 
 Thread::Thread() {

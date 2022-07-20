@@ -26,7 +26,6 @@ public:
 
 public:
     void Update();
-    void AddPacketToList(Packet* pPacket);
     void AddObject(ThreadObject* pThreadObj);
 
 private:
@@ -35,8 +34,5 @@ private:
 
     std::mutex _objs_lock;
     CacheRefresh<ThreadObject> _objList;
-    // 本线程中的所有待处理包
-    std::mutex _packet_lock;
-    CacheSwap<Packet> _cachePackets;
 };
 

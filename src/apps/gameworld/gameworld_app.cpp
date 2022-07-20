@@ -7,25 +7,65 @@
 #include "log4_help.h"
 #include "console.h"
 
-class TestThreadObj : public ThreadObject, public Singleton<TestThreadObj> {
+#include "packet.h"
+class TestThreadObj : public ThreadObject {
 public:
+    TestThreadObj():ThreadObject(TOT_TEST){}
     bool Init() {
         return true;
     }
 
     void Update() {
-        LOG_DEBUG("TestThreadObj update");
+        /* LOG_DEBUG("TestThreadObj update"); */
     }
+
+    void ProcessPacket(Packet*) {
+        LOG_DEBUG("[TestThreadObj::ProcessPacket] Packet come.")
+    }
+
     ~TestThreadObj(){}
+};
+
+class TestConsoleCmd :public ConsoleCmd
+ {
+ public:
+    void RegisterHandler() override {
+       OnRegisterHandler("-help", BindFunP1(this, &TestConsoleCmd::HandleHelp));
+       OnRegisterHandler("-a", BindFunP1(this, &TestConsoleCmd::HandleTest));
+    }
+ 
+ private:
+    void HandleHelp(std::vector<std::string>& params) {
+        LOG_DEBUG("[TestConsoleCmd::HandleHelp]");
+    }
+
+    void HandleTest(std::vector<std::string>& params) {
+        if (!CheckParamCnt(params, 0))
+            return;
+        Packet* pPacket = new Packet(0, 0);
+        ThreadMgr::GetInstance()->SendPacket(TOT_TEST, pPacket);
+    }
+ };
+
+class TestConsole : public Console {
+public:
+    bool Init() {
+        if(!Console::Init()) {
+            LOG_ERROR("[TestConsole::Init] init failed.");
+            return false;
+        }
+        Register<TestConsoleCmd>("test");
+        return true;
+    }
 };
 
 void GameworldApp::InitApp() 
 {
     Log4::Instance(APP_TYPE::APP_GAMEWORLD);
 
-    TestThreadObj* pTest = TestThreadObj::Instance();
-    ThreadMgr::GetInstance()->AddObjWorkThread(TOT_TEST, pTest);
+    TestThreadObj* pTest = new TestThreadObj();
+    ThreadMgr::GetInstance()->AddObjWorkThread(pTest);
     
-    Console* pConsole = new Console();
-    ThreadMgr::GetInstance()->AddObjWorkThread(TOT_CONSOLE, pConsole);
+    Console* pConsole = new TestConsole();
+    ThreadMgr::GetInstance()->AddObjWorkThread(pConsole);
 }

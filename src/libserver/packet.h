@@ -21,7 +21,7 @@ struct PacketHead {
 
 class Packet : public Buffer {
 public:
-    Packet(SOCKET socket, uint32 dest = 0);
+    Packet(SOCKET socket, unsigned short msgid = 0);
     ~Packet();
 
     /* template<class ProtoClass> */
@@ -48,19 +48,23 @@ public:
     void BackToPool();
     void CleanBuffer();
 
-    char* GetBuffer() const;
     unsigned short GetDataLength() const;
-    int GetMsgId() const;
     void FillData(unsigned int size);
     void ReAllocBuffer();
-    SOCKET GetSocket() const;
 
-    uint32 GetDest() const {
-        return _dest;
+    char* GetBuffer() const {
+        return _buffer;
+    }
+
+    SOCKET GetSocket() const {
+        return _socket;
+    }
+
+    unsigned short GetMsgId() const {
+        return _msgId;
     }
 
 private:
-    /* Proto::MsgId _msgId; */
+    unsigned short _msgId;
     SOCKET _socket;
-    uint32 _dest;
 };

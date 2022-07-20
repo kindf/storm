@@ -1,8 +1,8 @@
 #include "packet.h"
 
-Packet::Packet(SOCKET socket, uint32 dest) {
+Packet::Packet(SOCKET socket, unsigned short msgid) {
     _socket = socket;
-    _dest = dest;
+    _msgId = msgid;
     CleanBuffer();
 
     _bufferSize = DEFAULT_PACKET_BUFFER_SIZE;
@@ -16,7 +16,6 @@ Packet::~Packet() {
 }
 
 void Packet::BackToPool() {
-    _dest = TOT_DEFAULT;
     _beginIndex = 0;
     _endIndex = 0;
 }
@@ -30,10 +29,6 @@ void Packet::CleanBuffer() {
     _bufferSize = 0;
 }
 
-char* Packet::GetBuffer() const {
-    return _buffer;
-}
-
 unsigned short Packet::GetDataLength() const {
     return _endIndex - _beginIndex;
 }
@@ -44,8 +39,4 @@ void Packet::FillData(const unsigned int size) {
 
 void Packet::ReAllocBuffer() {
     Buffer::ReAllocBuffer(_endIndex - _beginIndex);
-}
-
-SOCKET Packet::GetSocket() const {
-    return _socket;
 }
