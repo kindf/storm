@@ -112,13 +112,3 @@ void ThreadMgr::SendPacket(THREAD_OBJECT_TYPE threadObjType, Packet* pPacket) {
     pThreadObj->AddPacket(pPacket);
     return;
 }
-
-void ThreadMgr::Update() {
-    for(auto pThread : _work_threads) {
-        pThread.second->Update();
-    }
-    
-    for(auto pThread : _threads) {
-        pThread.second->Update();
-    }
-}

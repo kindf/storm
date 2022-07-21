@@ -23,7 +23,9 @@ public:
         LOG_DEBUG("[TestThreadObj::ProcessPacket] Packet come.")
     }
 
-    ~TestThreadObj(){}
+    ~TestThreadObj(){
+        LOG_DEBUG("[TestThreadObj::~TestThreadObj]")
+    }
 };
 
 class TestConsoleCmd :public ConsoleCmd
@@ -42,8 +44,10 @@ class TestConsoleCmd :public ConsoleCmd
     void HandleTest(std::vector<std::string>& params) {
         if (!CheckParamCnt(params, 0))
             return;
-        Packet* pPacket = new Packet(0, 0);
-        ThreadMgr::GetInstance()->SendPacket(TOT_TEST, pPacket);
+        for(int i = 0; i < 1000; ++i) {
+            Packet* pPacket = new Packet(0, 0);
+            ThreadMgr::GetInstance()->SendPacket(TOT_TEST, pPacket);
+        }
     }
  };
 

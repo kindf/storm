@@ -54,7 +54,6 @@ void ServerApp::Dispose() {
 void ServerApp::Run() const {
     while (!Global::GetInstance()->IsStop) {
         UpdateTime();
-        _pThreadMgr->Update();
         DynamicObjectPoolMgr::GetInstance()->Update();
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
