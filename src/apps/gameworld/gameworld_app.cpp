@@ -6,6 +6,7 @@
 #include "thread_mgr.h"
 #include "log4_help.h"
 #include "console.h"
+#include "lua_engine.h"
 
 #include "packet.h"
 class TestThreadObj : public ThreadObject {
@@ -72,4 +73,7 @@ void GameworldApp::InitApp()
     
     Console* pConsole = new TestConsole();
     ThreadMgr::GetInstance()->AddObjWorkThread(pConsole);
+
+    LuaEngine* pLuaEngine = new LuaEngine();
+    ThreadMgr::GetInstance()->AddObjWorkThread(pLuaEngine);
 }

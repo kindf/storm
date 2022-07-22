@@ -17,11 +17,12 @@ aux_source_directory(. SRCS)
 aux_source_directory(../../libserver SRCS)
 
 include_directories(../../libserver)
+include_directories(${CMAKE_BINARY_DIR}/../../../libs)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "../../../bin")
 
 # set(CMAKE_CXX_FLAGS "-Wall -std=c++14 -pthread -lprotobuf -lcurl -ljsoncpp -lyaml-cpp -llog4cplus -lluajit -DEPOLL")
-set(CMAKE_CXX_FLAGS "-Wall -std=c++14 -pthread -llog4cplus -DEPOLL")
+set(CMAKE_CXX_FLAGS "-Wall -std=c++14 -pthread -llog4cplus -lluajit -DEPOLL")
 
 set(CMAKE_CXX_FLAGS_DEBUG "-D_DEBUG -O0 -g -ggdb")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
