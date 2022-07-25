@@ -15,6 +15,13 @@
 typedef uint64_t	uint64;
 typedef uint32_t	uint32;
 
+enum THREAD_TYPE {
+    TT_NETWORK = 0,
+    TT_OTHER,
+    TT_LUAENGINE,
+    TT_COUNT,
+};
+
 enum THREAD_OBJECT_TYPE {
     TOT_DEFAULT = 0,
     TOT_CLIENT,

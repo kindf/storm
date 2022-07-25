@@ -29,15 +29,14 @@ public:
     }
 };
 
-class TestConsoleCmd :public ConsoleCmd
- {
- public:
+class TestConsoleCmd :public ConsoleCmd{
+public:
     void RegisterHandler() override {
-       OnRegisterHandler("-help", BindFunP1(this, &TestConsoleCmd::HandleHelp));
-       OnRegisterHandler("-a", BindFunP1(this, &TestConsoleCmd::HandleTest));
-    }
+        OnRegisterHandler("-help", BindFunP1(this, &TestConsoleCmd::HandleHelp));
+        OnRegisterHandler("-a", BindFunP1(this, &TestConsoleCmd::HandleTest));
+   }
  
- private:
+private:
     void HandleHelp(std::vector<std::string>& params) {
         LOG_DEBUG("[TestConsoleCmd::HandleHelp]");
     }
@@ -69,11 +68,11 @@ void GameworldApp::InitApp()
     Log4::Instance(APP_TYPE::APP_GAMEWORLD);
 
     TestThreadObj* pTest = new TestThreadObj();
-    ThreadMgr::GetInstance()->AddObjWorkThread(pTest);
+    ThreadMgr::GetInstance()->AddObjWorkThread(TT_OTHER, pTest);
     
     Console* pConsole = new TestConsole();
-    ThreadMgr::GetInstance()->AddObjWorkThread(pConsole);
+    ThreadMgr::GetInstance()->AddObjWorkThread(TT_OTHER, pConsole);
 
     LuaEngine* pLuaEngine = new LuaEngine();
-    ThreadMgr::GetInstance()->AddObjWorkThread(pLuaEngine);
+    ThreadMgr::GetInstance()->AddObjWorkThread(TT_LUAENGINE, pLuaEngine);
 }

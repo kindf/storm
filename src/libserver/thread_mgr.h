@@ -1,6 +1,7 @@
 #pragma once
 
 #include <mutex>
+#include <vector>
 #include <map>
 #include "common.h"
 #include "thread.h"
@@ -14,15 +15,13 @@ class ThreadMgr :public Singleton<ThreadMgr>, public IDisposable {
 public:
     ThreadMgr();
     void StartAllWorkThread();
+    void Init();
 
     bool IsStopAll();
     bool IsDisposeAll();
     void Dispose() override;    
 
-    Thread* NewThread();
-    bool AddObjWorkThread(ThreadObject* obj);
-
-    bool NewObjThread(ThreadObject *obj);
+    bool AddObjWorkThread(THREAD_TYPE threadType, ThreadObject* obj);
 
     void RemoveObjByType(int objectType);
     // message
@@ -30,13 +29,8 @@ public:
     void SendPacket(THREAD_OBJECT_TYPE threadObjectType, Packet* pPacket);
 
 private:
-    uint64 _lastThreadSn{ 0 }; // 实现线程对象均分
-
     std::mutex _thread_lock;
-    std::map<uint64, Thread*> _threads;
-
-    std::mutex _work_thread_lock;
-    std::map<uint64, Thread*> _work_threads;
+    std::vector<Thread*> _threads;
 
     std::mutex _obj_lock;
     std::map<int, ThreadObject*> _objects;

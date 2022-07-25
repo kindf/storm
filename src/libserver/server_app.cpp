@@ -21,11 +21,7 @@ ServerApp::ServerApp(APP_TYPE  appType) {
     _pThreadMgr = ThreadMgr::GetInstance();
     UpdateTime();
 
-    // 创建线程
-    for (int i = 0; i < 2; i++) {
-        _pThreadMgr->NewThread();
-    }
-
+    _pThreadMgr->Init();
     _pThreadMgr->StartAllWorkThread();
 }
 
