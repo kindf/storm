@@ -7,6 +7,7 @@
 #include "log4_help.h"
 #include "console.h"
 #include "lua_engine.h"
+#include "network_listen.h"
 
 #include "packet.h"
 class TestThreadObj : public ThreadObject {
@@ -63,9 +64,12 @@ public:
     }
 };
 
-void GameworldApp::InitApp() 
-{
+void GameworldApp::InitApp() {
     Log4::Instance(APP_TYPE::APP_GAMEWORLD);
+
+    if(!ThreadMgr::GetInstance()->AddListenerToThread("127.0.0.1", 2233)) {
+        LOG_ERROR("network listen error.");
+    }
 
     TestThreadObj* pTest = new TestThreadObj();
     ThreadMgr::GetInstance()->AddObjWorkThread(TT_OTHER, pTest);

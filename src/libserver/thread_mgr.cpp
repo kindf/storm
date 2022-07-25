@@ -1,6 +1,7 @@
 #include "thread_mgr.h"
 #include "common.h"
 #include "log4_help.h"
+#include "network_listen.h"
 
 ThreadMgr::ThreadMgr() {
 }
@@ -64,6 +65,18 @@ void ThreadMgr::Dispose() {
         delete pThread;
     }
     _threads.clear();
+}
+
+
+bool ThreadMgr::AddListenerToThread(std::string ip, int port) {
+    NetworkListen* pListener = new NetworkListen();
+    if (!pListener->Listen(ip, port)) {
+       delete pListener;
+       return false;
+    }
+    
+    AddObjWorkThread(TT_NETWORK, pListener);
+    return true;
 }
 
 void ThreadMgr::RemoveObjByType(int objectType) {

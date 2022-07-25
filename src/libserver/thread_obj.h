@@ -18,7 +18,7 @@ public:
     Thread* GetThread() const;
     bool IsActive() const;
     void Dispose() override;
-    bool CheckObjType(int type) const;
+    void SetObjType(int type);
     int GetObjType() const;   
 
     std::list<Packet*>* GetPackets();

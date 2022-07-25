@@ -1,4 +1,4 @@
 
 function update()
-    print("hello lua")
+    -- print("hello lua")
 end

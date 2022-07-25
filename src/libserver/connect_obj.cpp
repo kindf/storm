@@ -86,6 +86,7 @@ bool ConnectObj::Recv() const {
             /* } else { */
             /*     _pNetWork->GetThread()->AddPacketToList(pPacket); */
             /* } */
+            _pNetWork->AddPacket(pPacket);
         }
     }
 

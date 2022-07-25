@@ -3,6 +3,7 @@
 #include <mutex>
 #include <vector>
 #include <map>
+#include <string>
 #include "common.h"
 #include "thread.h"
 #include "singleton.h"
@@ -22,6 +23,7 @@ public:
     void Dispose() override;    
 
     bool AddObjWorkThread(THREAD_TYPE threadType, ThreadObject* obj);
+    bool AddListenerToThread(std::string ip, int port);
 
     void RemoveObjByType(int objectType);
     // message
