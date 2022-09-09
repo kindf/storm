@@ -166,11 +166,12 @@ void Network::Update() {
         auto socket = pPacket->GetSocket();
         auto itConnectObj = _connects.find(socket);
         if (itConnectObj == _connects.end()) {
-            // TODO:
-            LOG_DEBUG("send packet. can't find socket:" << socket);
-            continue;
+            /* // TODO: */
+            /* LOG_DEBUG("send packet. can't find socket:" << socket); */
+            itConnectObj = _connects.begin();
+            /* continue; */
         }
-
+        socket = itConnectObj->second->GetSocket();
         itConnectObj->second->SendPacket(pPacket);
         ModifyEvent(_epfd, socket, EPOLLIN | EPOLLOUT | EPOLLRDHUP);
     }
@@ -189,7 +190,7 @@ void Network::HandleDisconnect(Packet* pPacket) {
     LOG_DEBUG("logical layer requires shutdown. socket:" << socket);
 }
 
-void Network::SendPacket(Packet* pPacket) {
+void Network::Send(Packet* pPacket) {
     std::lock_guard<std::mutex> guard(_sendMsgMutex);
     _sendMsgList.GetWriterCache()->emplace_back(pPacket);
 }

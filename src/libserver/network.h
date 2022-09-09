@@ -32,7 +32,7 @@ class Network : public ThreadObject, public ISocketObject {
 public:
     void Dispose() override;
     SOCKET GetSocket() override { return _masterSocket; }
-    void SendPacket(Packet*);
+    void Send(Packet*);
 
 protected:
     static void SetSocketOpt(SOCKET socket);

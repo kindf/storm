@@ -3,11 +3,6 @@
 #include "connect_obj.h"
 #include "log4_help.h"
 
-NetworkListen::NetworkListen() {
-    SetObjType(TOT_CLIENT);
-}
-
-
 bool NetworkListen::Init() {
     return true;
 }

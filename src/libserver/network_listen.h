@@ -4,7 +4,6 @@
 
 class NetworkListen :public Network {
 public:
-    NetworkListen();
     bool Init() override;
     bool Listen(std::string ip, int port);
     void Update() override;

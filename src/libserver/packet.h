@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include "base_buffer.h"
 #include "common.h"
 
@@ -44,6 +45,15 @@ public:
     /*     protoClase.SerializePartialToArray(GetBuffer(), total); */
     /*     FillData(total); */
     /* } */
+
+    void SerializeToBuffer(std::string msg) {
+        auto total = msg.size();
+        while(GetEmptySize() < total) {
+            ReAllocBuffer();
+        }
+        ::memcpy(GetBuffer(), msg.c_str(), total);
+        FillData(total);
+    }
 
     void BackToPool();
     void CleanBuffer();

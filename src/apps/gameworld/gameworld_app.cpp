@@ -30,6 +30,10 @@ public:
     }
 };
 
+#include <string>
+class ClientNetworkListen : public NetworkListen, public Singleton<ClientNetworkListen> {
+};
+
 class TestConsoleCmd :public ConsoleCmd{
 public:
     void RegisterHandler() override {
@@ -45,9 +49,11 @@ private:
     void HandleTest(std::vector<std::string>& params) {
         if (!CheckParamCnt(params, 0))
             return;
-        for(int i = 0; i < 1000; ++i) {
+        for(int i = 0; i < 1; ++i) {
             Packet* pPacket = new Packet(0, 0);
-            ThreadMgr::GetInstance()->SendPacket(TOT_TEST, pPacket);
+            pPacket->SerializeToBuffer("hello world");
+            /* ThreadMgr::GetInstance()->SendPacket(TOT_CLIENT, pPacket); */
+            ClientNetworkListen::GetInstance()->Send(pPacket);
         }
     }
  };
@@ -67,9 +73,14 @@ public:
 void GameworldApp::InitApp() {
     Log4::Instance(APP_TYPE::APP_GAMEWORLD);
 
-    if(!ThreadMgr::GetInstance()->AddListenerToThread("127.0.0.1", 2233)) {
+    ClientNetworkListen* pClient = ClientNetworkListen::Instance();
+    pClient->SetObjType(TOT_CLIENT);
+    if(!pClient->Listen("127.0.0.1", 2233)) {
         LOG_ERROR("network listen error.");
     }
+
+
+    ThreadMgr::GetInstance()->AddObjWorkThread(TT_NETWORK, pClient);
 
     TestThreadObj* pTest = new TestThreadObj();
     ThreadMgr::GetInstance()->AddObjWorkThread(TT_OTHER, pTest);
