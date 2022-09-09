@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <vector>
 #include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
@@ -33,6 +34,9 @@ public:
     void Dispose() override;
     SOCKET GetSocket() override { return _masterSocket; }
     void Send(Packet*);
+    void Send(SOCKET sock, std::string msg);
+    void SendAll(std::string msg);
+    std::vector<int> GetAllConnectSocket();
 
 protected:
     static void SetSocketOpt(SOCKET socket);

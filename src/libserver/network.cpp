@@ -166,10 +166,8 @@ void Network::Update() {
         auto socket = pPacket->GetSocket();
         auto itConnectObj = _connects.find(socket);
         if (itConnectObj == _connects.end()) {
-            /* // TODO: */
-            /* LOG_DEBUG("send packet. can't find socket:" << socket); */
-            itConnectObj = _connects.begin();
-            /* continue; */
+            LOG_DEBUG("send packet. can't find socket:" << socket);
+            continue;
         }
         socket = itConnectObj->second->GetSocket();
         itConnectObj->second->SendPacket(pPacket);
@@ -195,4 +193,25 @@ void Network::Send(Packet* pPacket) {
     _sendMsgList.GetWriterCache()->emplace_back(pPacket);
 }
 
+void Network::Send(SOCKET sock, std::string msg) {
+    Packet* pPacket = new Packet(sock);
+    pPacket->SerializeToBuffer(msg);
+    std::lock_guard<std::mutex> guard(_sendMsgMutex);
+    _sendMsgList.GetWriterCache()->emplace_back(pPacket);
+}
+
+void Network::SendAll(std::string msg) {
+    std::vector<int> vec = GetAllConnectSocket();
+    for(auto iter = vec.begin(); iter != vec.end(); ++iter) {
+        Send(*iter, msg);
+    }
+}
+
+std::vector<int> Network::GetAllConnectSocket() {
+    std::vector<int> ret;
+    for(auto iter = _connects.begin(); iter != _connects.end(); ++iter) {
+        ret.push_back(iter->second->GetSocket());
+    }
+    return ret;
+}
 

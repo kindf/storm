@@ -49,12 +49,7 @@ private:
     void HandleTest(std::vector<std::string>& params) {
         if (!CheckParamCnt(params, 0))
             return;
-        for(int i = 0; i < 1; ++i) {
-            Packet* pPacket = new Packet(0, 0);
-            pPacket->SerializeToBuffer("hello world");
-            /* ThreadMgr::GetInstance()->SendPacket(TOT_CLIENT, pPacket); */
-            ClientNetworkListen::GetInstance()->Send(pPacket);
-        }
+        ClientNetworkListen::GetInstance()->SendAll("hello world\n");
     }
  };
 
