@@ -1,6 +1,5 @@
 
 function update()
-    -- print("hello lua")
 end
 
 function require_ex(_mname) 
