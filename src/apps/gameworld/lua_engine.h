@@ -2,9 +2,9 @@
 #include "thread_obj.h"
 extern "C"
 {
-    #include "LuaJIT/src/lua.h"
-    #include "LuaJIT/src/lualib.h"
-    #include "LuaJIT/src/lauxlib.h"
+    #include "lua.h"
+    #include "lualib.h"
+    #include "lauxlib.h"
 };
 
 class LuaEngine : public ThreadObject {

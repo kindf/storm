@@ -2,7 +2,7 @@
 #include "log4_help.h"
 
 LuaEngine::LuaEngine() {
-    _luaState = lua_open();
+    _luaState = luaL_newstate();
     luaopen_base(_luaState);
 }
 
