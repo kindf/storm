@@ -12,9 +12,15 @@ LuaEngine::~LuaEngine() {
 }
 
 bool LuaEngine::Init() {
-    int ret = luaL_loadfile(_luaState, "luascripts/gameworld/main.lua");
+    int ret = luaL_loadfile(_luaState, "luascripts/init.lua");
     if(ret) {
-        LOG_DEBUG("load lua failed.");
+        LOG_DEBUG("load lua failed." << "filename: init.lua");
+        return false;
+    }
+    lua_pcall(_luaState, 0, 0, 0);
+    ret = luaL_loadfile(_luaState, "luascripts/gameworld/main.lua");
+    if(ret) {
+        LOG_DEBUG("load lua failed." << "filename: main.lua");
         return false;
     }
     lua_pcall(_luaState, 0, 0, 0);
