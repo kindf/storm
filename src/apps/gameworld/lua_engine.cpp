@@ -4,6 +4,7 @@
 LuaEngine::LuaEngine() {
     _luaState = luaL_newstate();
     luaopen_base(_luaState);
+    luaL_openlibs(_luaState);
 }
 
 LuaEngine::~LuaEngine() {
@@ -21,7 +22,7 @@ bool LuaEngine::Init() {
 }
 
 void LuaEngine::Update() {
-    lua_getglobal(_luaState, "update");
+    lua_getglobal(_luaState, "Update");
     int ret = lua_pcall(_luaState, 0, 0, 0);
     if(ret) {
         const char* pErrorMsg = lua_tostring(_luaState, -1);

@@ -5,6 +5,9 @@ log/
 *.a
 bin/
 
+.cache/
+compile_commands.json
+
 #cmake中间文件
 CMakeFiles/
 CMakeCache.txt

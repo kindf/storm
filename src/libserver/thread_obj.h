@@ -11,7 +11,7 @@ class ThreadObject : public SnObject, public IDisposable {
 public:
     ThreadObject(int obj_type = TOT_DEFAULT) :_active(true), _pThread(nullptr), _obj_type(obj_type){};
     virtual bool Init() = 0;
-    virtual void Update() = 0;    
+    virtual void Update() = 0;
     virtual void ProcessPacket(Packet* pPacket){};
 
     void SetThread(Thread* pThread);
@@ -19,7 +19,7 @@ public:
     bool IsActive() const;
     void Dispose() override;
     void SetObjType(int type);
-    int GetObjType() const;   
+    int GetObjType() const;
 
     std::list<Packet*>* GetPackets();
     void AddPacket(Packet* pPacket);

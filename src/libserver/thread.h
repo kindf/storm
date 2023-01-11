@@ -23,6 +23,7 @@ public:
     bool IsStop() const;
     bool IsDispose();
     void Dispose() override;
+    std::thread::id GetThreadId() { return _thread.get_id(); };
 
 public:
     void Update();

@@ -1,0 +1,6 @@
+[submodule "lualib/lua-mongo"]
+	path = lualib/lua-mongo
+	url = https://github.com/cloudwu/lua-mongo.git
+[submodule "lualib/lua-bson"]
+	path = lualib/lua-bson
+	url = https://github.com/cloudwu/lua-bson.git

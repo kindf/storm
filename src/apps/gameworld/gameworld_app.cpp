@@ -74,12 +74,11 @@ void GameworldApp::InitApp() {
         LOG_ERROR("network listen error.");
     }
 
-
     ThreadMgr::GetInstance()->AddObjWorkThread(TT_NETWORK, pClient);
 
     TestThreadObj* pTest = new TestThreadObj();
     ThreadMgr::GetInstance()->AddObjWorkThread(TT_OTHER, pTest);
-    
+
     Console* pConsole = new TestConsole();
     ThreadMgr::GetInstance()->AddObjWorkThread(TT_OTHER, pConsole);
 

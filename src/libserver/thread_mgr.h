@@ -20,7 +20,7 @@ public:
 
     bool IsStopAll();
     bool IsDisposeAll();
-    void Dispose() override;    
+    void Dispose() override;
 
     bool AddObjWorkThread(THREAD_TYPE threadType, ThreadObject* obj);
     bool AddListenerToThread(std::string ip, int port);
