@@ -15,5 +15,12 @@ public:
     void Update();
     bool Init();
 private:
+    bool loadLuaFile(char* filename);
+private:
     lua_State* _luaState;
 };
+
+class GlobalLuaFunction {
+public:
+    static int Send(lua_State *l);
+}; 

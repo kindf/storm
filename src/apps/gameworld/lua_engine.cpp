@@ -11,19 +11,30 @@ LuaEngine::~LuaEngine() {
     lua_close(_luaState);
 }
 
+bool LuaEngine::loadLuaFile(char* filename) {
+    int ret = luaL_loadfile(_luaState, filename);
+    if(ret) {
+        LOG_DEBUG("load lua failed." << "filename: " << filename);
+        return false;
+    }
+    lua_pcall(_luaState, 0, 0, 0);
+    return true;
+}
+
 bool LuaEngine::Init() {
-    int ret = luaL_loadfile(_luaState, "luascripts/init.lua");
-    if(ret) {
-        LOG_DEBUG("load lua failed." << "filename: init.lua");
+    lua_pushcfunction(_luaState, GlobalLuaFunction::Send);
+    lua_setglobal(_luaState, "send");
+
+    char file1[] = "luascripts/init.lua";
+    bool ret = loadLuaFile(file1);
+    if(!ret) {
         return false;
     }
-    lua_pcall(_luaState, 0, 0, 0);
-    ret = luaL_loadfile(_luaState, "luascripts/gameworld/main.lua");
-    if(ret) {
-        LOG_DEBUG("load lua failed." << "filename: main.lua");
+    char file2[] = "luascripts/gameworld/main.lua";
+    ret = loadLuaFile(file2);
+    if(!ret) {
         return false;
     }
-    lua_pcall(_luaState, 0, 0, 0);
     return true;
 }
 
@@ -35,3 +46,10 @@ void LuaEngine::Update() {
         LOG_DEBUG("call lua error. msg:" << pErrorMsg);
     }
 }
+
+int GlobalLuaFunction::Send(lua_State *l) {
+    const char *s = luaL_checkstring(l, 1);
+    LOG_DEBUG("lua call send. content: " << s);
+    return 0;
+}
+

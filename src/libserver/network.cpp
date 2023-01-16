@@ -200,6 +200,13 @@ void Network::Send(SOCKET sock, std::string msg) {
     _sendMsgList.GetWriterCache()->emplace_back(pPacket);
 }
 
+void Network::Send(SOCKET sock, char* msg, int len) {
+    Packet* pPacket = new Packet(sock);
+    pPacket->SerializeToBuffer(msg, len);
+    std::lock_guard<std::mutex> guard(_sendMsgMutex);
+    _sendMsgList.GetWriterCache()->emplace_back(pPacket);
+}
+
 void Network::SendAll(std::string msg) {
     std::vector<int> vec = GetAllConnectSocket();
     for(auto iter = vec.begin(); iter != vec.end(); ++iter) {

@@ -35,6 +35,7 @@ public:
     SOCKET GetSocket() override { return _masterSocket; }
     void Send(Packet*);
     void Send(SOCKET sock, std::string msg);
+    void Send(SOCKET sock, char* msg, int len);
     void SendAll(std::string msg);
     std::vector<int> GetAllConnectSocket();
 
