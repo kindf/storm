@@ -1,10 +1,12 @@
 #include "lua_engine.h"
 #include "log4_help.h"
+#include "gameworld_app.h"
 
 LuaEngine::LuaEngine() {
     _luaState = luaL_newstate();
     luaopen_base(_luaState);
     luaL_openlibs(_luaState);
+    LuaAPI::Resiter(_luaState);
 }
 
 LuaEngine::~LuaEngine() {
@@ -22,9 +24,6 @@ bool LuaEngine::loadLuaFile(char* filename) {
 }
 
 bool LuaEngine::Init() {
-    lua_pushcfunction(_luaState, GlobalLuaFunction::Send);
-    lua_setglobal(_luaState, "send");
-
     char file1[] = "luascripts/init.lua";
     bool ret = loadLuaFile(file1);
     if(!ret) {
@@ -47,9 +46,25 @@ void LuaEngine::Update() {
     }
 }
 
-int GlobalLuaFunction::Send(lua_State *l) {
+void LuaAPI::Resiter(lua_State *l) {
+    static luaL_Reg lua_libs[] = {
+        {"send", Send},
+        {"hello", Hello},
+        {NULL, NULL}
+    };
+    luaL_newlib(l, lua_libs);
+    lua_setglobal(l, "storm");
+}
+
+int LuaAPI::Hello(lua_State *l) {
+    LOG_DEBUG("Hello World!!!!");
+    return 0;
+}
+
+int LuaAPI::Send(lua_State *l) {
     const char *s = luaL_checkstring(l, 1);
     LOG_DEBUG("lua call send. content: " << s);
+    ClientNetworkListen::GetInstance()->SendAll(s);
     return 0;
 }
 

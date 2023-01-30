@@ -20,7 +20,9 @@ private:
     lua_State* _luaState;
 };
 
-class GlobalLuaFunction {
+class LuaAPI {
 public:
+    static void Resiter(lua_State *l);
+    static int Hello(lua_State *l);
     static int Send(lua_State *l);
 }; 

@@ -30,10 +30,6 @@ public:
     }
 };
 
-#include <string>
-class ClientNetworkListen : public NetworkListen, public Singleton<ClientNetworkListen> {
-};
-
 class TestConsoleCmd :public ConsoleCmd{
 public:
     void RegisterHandler() override {
