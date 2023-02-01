@@ -1,8 +1,7 @@
 #include "lua_engine.h"
 #include "log4_help.h"
-#include "gameworld_app.h"
 
-LuaEngine::LuaEngine() {
+LuaEngine::LuaEngine(std::string path): _luaPath(path) {
     _luaState = luaL_newstate();
     luaopen_base(_luaState);
     luaL_openlibs(_luaState);
@@ -29,7 +28,8 @@ bool LuaEngine::Init() {
     if(!ret) {
         return false;
     }
-    char file2[] = "luascripts/gameworld/main.lua";
+    char file2[32];
+    sprintf(file2, "luascripts/%s/main.lua", _luaPath.c_str());
     ret = loadLuaFile(file2);
     if(!ret) {
         return false;
@@ -64,7 +64,6 @@ int LuaAPI::Hello(lua_State *l) {
 int LuaAPI::Send(lua_State *l) {
     const char *s = luaL_checkstring(l, 1);
     LOG_DEBUG("lua call send. content: " << s);
-    ClientNetworkListen::GetInstance()->SendAll(s);
     return 0;
 }
 
