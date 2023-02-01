@@ -1,5 +1,6 @@
 #pragma once
 #include "thread_obj.h"
+#include <string>
 extern "C"
 {
     #include "lua.h"
@@ -9,11 +10,21 @@ extern "C"
 
 class LuaEngine : public ThreadObject {
 public:
-    LuaEngine();
+    LuaEngine(std::string path);
     ~LuaEngine();
 
     void Update();
     bool Init();
 private:
+    bool loadLuaFile(char* filename);
+private:
     lua_State* _luaState;
+    std::string _luaPath;
 };
+
+class LuaAPI {
+public:
+    static void Resiter(lua_State *l);
+    static int Hello(lua_State *l);
+    static int Send(lua_State *l);
+}; 

@@ -1,6 +1,12 @@
-[submodule "lualib/lua-mongo"]
-	path = lualib/lua-mongo
+[submodule "lualib-src/lua-mongo"]
+	path = lualib-src/lua-mongo
 	url = https://github.com/cloudwu/lua-mongo.git
-[submodule "lualib/lua-bson"]
-	path = lualib/lua-bson
+[submodule "lualib-src/lua-bson"]
+	path = lualib-src/lua-bson
 	url = https://github.com/cloudwu/lua-bson.git
+[submodule "lualib-src/lua-protobuf"]
+	path = lualib-src/lua-protobuf
+	url = https://github.com/starwing/lua-protobuf.git
+[submodule "lualib-src/lua-cjson"]
+	path = lualib-src/lua-cjson
+	url = https://github.com/cloudwu/lua-cjson.git

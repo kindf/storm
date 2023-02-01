@@ -30,10 +30,6 @@ public:
     }
 };
 
-#include <string>
-class ClientNetworkListen : public NetworkListen, public Singleton<ClientNetworkListen> {
-};
-
 class TestConsoleCmd :public ConsoleCmd{
 public:
     void RegisterHandler() override {
@@ -82,6 +78,6 @@ void GameworldApp::InitApp() {
     Console* pConsole = new TestConsole();
     ThreadMgr::GetInstance()->AddObjWorkThread(TT_OTHER, pConsole);
 
-    LuaEngine* pLuaEngine = new LuaEngine();
+    LuaEngine* pLuaEngine = new LuaEngine("gameworld");
     ThreadMgr::GetInstance()->AddObjWorkThread(TT_LUAENGINE, pLuaEngine);
 }

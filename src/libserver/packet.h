@@ -55,6 +55,14 @@ public:
         FillData(total);
     }
 
+    void SerializeToBuffer(char* msg, unsigned int len) {
+        while(GetEmptySize() < len) {
+            ReAllocBuffer();
+        }
+        ::memcpy(GetBuffer(), msg, len);
+        FillData(len);
+    }
+
     void BackToPool();
     void CleanBuffer();
 
