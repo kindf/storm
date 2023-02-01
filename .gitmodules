@@ -7,3 +7,6 @@
 [submodule "lualib-src/lua-protobuf"]
 	path = lualib-src/lua-protobuf
 	url = https://github.com/starwing/lua-protobuf.git
+[submodule "lualib-src/lua-cjson"]
+	path = lualib-src/lua-cjson
+	url = https://github.com/cloudwu/lua-cjson.git

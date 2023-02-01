@@ -1,5 +1,6 @@
 local pb = require "pb"
 local protoc = require "protoc"
+local cjson = require "cjson"
 
 assert(protoc:load [[
    message Phone {
@@ -35,7 +36,7 @@ function Update()
     local now = os.time()
     if now >= LastPrintTs + 1 then
         LastPrintTs = now
-        storm.send(bytes)
+        print(cjson.encode({1, 2, 3, 4}))
     end
 end
 
